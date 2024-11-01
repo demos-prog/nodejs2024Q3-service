@@ -1,8 +1,10 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	ForbiddenException,
 	Get,
+	HttpCode,
 	NotFoundException,
 	Param,
 	ParseUUIDPipe,
@@ -49,5 +51,15 @@ export class UserController {
 			throw new ForbiddenException('Incorrect existing password');
 		}
 		return this.userService.updatePassword(userId, dto, user.version + 1);
+	}
+
+	@Delete(':id')
+	@HttpCode(204)
+	async delete(@Param('id', new ParseUUIDPipe()) userId: string) {
+		const user = await this.userService.getById(userId);
+		if (!user) {
+			throw new NotFoundException(`User with ID ${userId} not found`);
+		}
+		this.userService.delete(userId);
 	}
 }

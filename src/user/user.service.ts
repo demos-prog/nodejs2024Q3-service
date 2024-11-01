@@ -19,10 +19,18 @@ export class UserService {
 		return this.prisma.user.create({ data: { ...dto, version: 1 } });
 	}
 
-	async updatePassword(id: string, dto: UpdatePasswordDto, version: number) {
+	async updatePassword(
+		userId: string,
+		dto: UpdatePasswordDto,
+		version: number,
+	) {
 		return this.prisma.user.update({
-			where: { id },
-			data: { password: dto.newPassword, version: version },
+			where: { id: userId },
+			data: { password: dto.newPassword, version },
 		});
+	}
+
+	async delete(userId: string) {
+		return this.prisma.user.delete({ where: { id: userId } });
 	}
 }
