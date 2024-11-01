@@ -6,26 +6,26 @@ import { PrismaService } from 'src/prisma.service';
 export class TrackService {
 	constructor(private prisma: PrismaService) {}
 
-	create(createTrackDto: CreateTrackDto) {
+	async create(createTrackDto: CreateTrackDto) {
 		return this.prisma.track.create({ data: createTrackDto });
 	}
 
-	findAll() {
+	async findAll() {
 		return this.prisma.track.findMany();
 	}
 
-	findOne(id: string) {
+	async findOne(id: string) {
 		return this.prisma.track.findUnique({ where: { id } });
 	}
 
-	update(id: string, dto: CreateTrackDto) {
+	async update(id: string, dto: CreateTrackDto) {
 		return this.prisma.track.update({
 			where: { id },
 			data: dto,
 		});
 	}
 
-	remove(id: string) {
+	async remove(id: string) {
 		return this.prisma.track.delete({ where: { id } });
 	}
 }
