@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
-import { UpdateTrackDto } from './dto/update-track.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -19,11 +18,14 @@ export class TrackService {
 		return this.prisma.track.findUnique({ where: { id } });
 	}
 
-	update(id: number, updateTrackDto: UpdateTrackDto) {
-		return `This action updates a #${id} track`;
+	update(id: string, dto: CreateTrackDto) {
+		return this.prisma.track.update({
+			where: { id },
+			data: dto,
+		});
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} track`;
+	remove(id: string) {
+		return this.prisma.track.delete({ where: { id } });
 	}
 }
