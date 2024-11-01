@@ -30,7 +30,12 @@ export class UserController {
 		if (!user) {
 			throw new NotFoundException(`User with ID ${id} not found`);
 		}
-		return user;
+		return Object.keys(user)
+			.filter((field) => field !== 'password')
+			.reduce((acc, field) => {
+				acc[field] = user[field];
+				return acc;
+			}, {});
 	}
 
 	@Post()

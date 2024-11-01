@@ -8,15 +8,34 @@ export class UserService {
 	constructor(private prisma: PrismaService) {}
 
 	async getAll() {
-		return this.prisma.user.findMany();
+		return this.prisma.user.findMany({
+			select: {
+				id: true,
+				login: true,
+				version: true,
+				createdAt: true,
+				updatedAt: true,
+			},
+		});
 	}
 
 	async getById(id: string) {
-		return this.prisma.user.findUnique({ where: { id } });
+		return this.prisma.user.findUnique({
+			where: { id },
+		});
 	}
 
 	async create(dto: CreateUserDto) {
-		return this.prisma.user.create({ data: { ...dto, version: 1 } });
+		return this.prisma.user.create({
+			data: { ...dto, version: 1 },
+			select: {
+				id: true,
+				login: true,
+				version: true,
+				createdAt: true,
+				updatedAt: true,
+			},
+		});
 	}
 
 	async updatePassword(
@@ -27,6 +46,13 @@ export class UserService {
 		return this.prisma.user.update({
 			where: { id: userId },
 			data: { password: dto.newPassword, version },
+			select: {
+				id: true,
+				login: true,
+				version: true,
+				createdAt: true,
+				updatedAt: true,
+			},
 		});
 	}
 
