@@ -13,10 +13,14 @@ import {
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AlbumService } from 'src/album/album.service';
 
 @Controller('artist')
 export class ArtistController {
-	constructor(private readonly artistService: ArtistService) {}
+	constructor(
+		private readonly artistService: ArtistService,
+		private readonly albumService: AlbumService,
+	) {}
 
 	@Post()
 	create(@Body() createArtistDto: CreateArtistDto) {
@@ -56,6 +60,14 @@ export class ArtistController {
 		if (!artist) {
 			throw new NotFoundException(`Artist with id ${id} not found`);
 		}
-		this.artistService.remove(id);
+		const res = await this.artistService.remove(id);
+		if (res) {
+			const albums = await this.albumService.findAll();
+			albums
+				.filter((album) => album.artistId === id)
+				.forEach((album) => {
+					this.albumService.update(album.id, { artistId: null });
+				});
+		}
 	}
 }
