@@ -39,8 +39,13 @@ export class UserController {
 	}
 
 	@Post()
-	create(@Body() dto: CreateUserDto) {
-		return this.userService.create(dto);
+	async create(@Body() dto: CreateUserDto) {
+		const user = await this.userService.create(dto);
+		return {
+			...user,
+			createdAt: new Date(user.createdAt).getTime(),
+			updatedAt: new Date(user.updatedAt).getTime(),
+		};
 	}
 
 	@Put(':id')
@@ -55,7 +60,16 @@ export class UserController {
 		if (user.password !== dto.oldPassword) {
 			throw new ForbiddenException('Incorrect existing password');
 		}
-		return this.userService.updatePassword(userId, dto, user.version + 1);
+		const updatedUser = await this.userService.updatePassword(
+			userId,
+			dto,
+			user.version + 1,
+		);
+		return {
+			...updatedUser,
+			createdAt: new Date(updatedUser.createdAt).getTime(),
+			updatedAt: new Date(updatedUser.updatedAt).getTime(),
+		};
 	}
 
 	@Delete(':id')
