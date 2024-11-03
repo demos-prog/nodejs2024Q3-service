@@ -49,14 +49,14 @@ npm start
 - method: POST
 - url: http://localhost:4000/track
 - body: {"name": "trackName", "duration": 123}
-- Save reurned trackId
+- Save the returned trackId
 
 5. Create a Favorites List manualy (using Postman):
 
 - method: POST
 - url: http://localhost:4000/favs/track/"trackId"
 
-6. Run tests in separate terminal
+6. Run tests in a separate terminal
 
 ```
 npm run test
