@@ -23,13 +23,13 @@ export class ArtistController {
 	) {}
 
 	@Post()
-	create(@Body() createArtistDto: CreateArtistDto) {
-		return this.artistService.create(createArtistDto);
+	async create(@Body() createArtistDto: CreateArtistDto) {
+		return await this.artistService.create(createArtistDto);
 	}
 
 	@Get()
-	findAll() {
-		return this.artistService.findAll();
+	async findAll() {
+		return await this.artistService.findAll();
 	}
 
 	@Get(':id')
@@ -50,7 +50,7 @@ export class ArtistController {
 		if (!artist) {
 			throw new NotFoundException(`Artist with id ${id} not found`);
 		}
-		return this.artistService.update(id, updateArtistDto);
+		return await this.artistService.update(id, updateArtistDto);
 	}
 
 	@Delete(':id')

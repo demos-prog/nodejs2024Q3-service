@@ -23,13 +23,13 @@ export class AlbumController {
 	) {}
 
 	@Post()
-	create(@Body() createAlbumDto: CreateAlbumDto) {
-		return this.albumService.create(createAlbumDto);
+	async create(@Body() createAlbumDto: CreateAlbumDto) {
+		return await this.albumService.create(createAlbumDto);
 	}
 
 	@Get()
-	findAll() {
-		return this.albumService.findAll();
+	async findAll() {
+		return await this.albumService.findAll();
 	}
 
 	@Get(':id')
@@ -50,7 +50,7 @@ export class AlbumController {
 		if (!album) {
 			throw new NotFoundException(`Album with id ${id} not found`);
 		}
-		return this.albumService.update(id, updateAlbumDto);
+		return await this.albumService.update(id, updateAlbumDto);
 	}
 
 	@Delete(':id')

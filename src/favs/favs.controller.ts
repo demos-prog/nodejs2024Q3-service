@@ -80,7 +80,7 @@ export class FavsController {
 				artists: [],
 				tracks: [trackId],
 			};
-			return this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(currentUserId, newFavorites);
 		}
 		if (favoritesOfUser.tracks.includes(trackId)) {
 			throw new ForbiddenException(
@@ -88,7 +88,7 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.tracks.push(trackId);
-		return this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Delete('track/:id')
@@ -107,7 +107,7 @@ export class FavsController {
 			(id) => id !== trackId,
 		);
 
-		this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Post('album/:id')
@@ -127,7 +127,7 @@ export class FavsController {
 				artists: [],
 				tracks: [],
 			};
-			return this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(currentUserId, newFavorites);
 		}
 		if (favoritesOfUser.albums.includes(albumId)) {
 			throw new ForbiddenException(
@@ -135,7 +135,7 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.albums.push(albumId);
-		return this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Delete('album/:id')
@@ -154,7 +154,7 @@ export class FavsController {
 			(id) => id !== albumId,
 		);
 
-		this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Post('artist/:id')
@@ -174,7 +174,7 @@ export class FavsController {
 				artists: [artistID],
 				tracks: [],
 			};
-			return this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(currentUserId, newFavorites);
 		}
 		if (favoritesOfUser.artists.includes(artistID)) {
 			throw new ForbiddenException(
@@ -182,7 +182,7 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.artists.push(artistID);
-		return this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Delete('artist/:id')
