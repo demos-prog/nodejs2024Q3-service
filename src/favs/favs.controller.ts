@@ -15,6 +15,7 @@ import { Favorites } from './entities/favorites.entity';
 import { TrackService } from 'src/track/track.service';
 import { currentUserId } from 'src/user/user.controller';
 import { AlbumService } from 'src/album/album.service';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Controller('favs')
 export class FavsController {
@@ -22,6 +23,7 @@ export class FavsController {
 		private readonly favsService: FavsService,
 		private readonly trackService: TrackService,
 		private readonly albumService: AlbumService,
+		private readonly artistService: ArtistService,
 	) {}
 
 	@Get()
@@ -34,7 +36,7 @@ export class FavsController {
 		const track = await this.trackService.findOne(trackId);
 		if (!track) {
 			throw new UnprocessableEntityException(
-				`Track with ID ${trackId} not found`,
+				`Track with ID ${trackId} not found in favorites`,
 			);
 		}
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
@@ -65,7 +67,9 @@ export class FavsController {
 		);
 		const track = favoritesOfUser.tracks.find((id) => id === trackId);
 		if (!track) {
-			throw new NotFoundException(`Track with ID ${trackId} not found`);
+			throw new NotFoundException(
+				`Track with ID ${trackId} not found in favorites`,
+			);
 		}
 		favoritesOfUser.tracks = favoritesOfUser.tracks.filter(
 			(id) => id !== trackId,
@@ -79,7 +83,7 @@ export class FavsController {
 		const album = await this.albumService.findOne(albumId);
 		if (!album) {
 			throw new UnprocessableEntityException(
-				`Track with ID ${albumId} not found`,
+				`Album with ID ${albumId} not found in favorites`,
 			);
 		}
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
@@ -93,9 +97,9 @@ export class FavsController {
 			};
 			return this.favsService.create(currentUserId, newFavorites);
 		}
-		if (favoritesOfUser.tracks.includes(albumId)) {
+		if (favoritesOfUser.albums.includes(albumId)) {
 			throw new ForbiddenException(
-				`Track with ID ${albumId} is already in favorites`,
+				`Album with ID ${albumId} is already in favorites`,
 			);
 		}
 		favoritesOfUser.albums.push(albumId);
@@ -110,10 +114,61 @@ export class FavsController {
 		);
 		const album = favoritesOfUser.albums.find((id) => id === albumId);
 		if (!album) {
-			throw new NotFoundException(`Track with ID ${albumId} not found`);
+			throw new NotFoundException(
+				`Album with ID ${albumId} not found in favorites`,
+			);
 		}
 		favoritesOfUser.albums = favoritesOfUser.albums.filter(
 			(id) => id !== albumId,
+		);
+
+		this.favsService.update(currentUserId, favoritesOfUser);
+	}
+
+	@Post('artist/:id')
+	async addToFavArtists(@Param('id', new ParseUUIDPipe()) artistID: string) {
+		const artist = await this.artistService.findOne(artistID);
+		if (!artist) {
+			throw new UnprocessableEntityException(
+				`Artist with ID ${artistID} not found in favorites`,
+			);
+		}
+		const favoritesOfUser: Favorites = await this.favsService.findOne(
+			currentUserId,
+		);
+		if (!favoritesOfUser) {
+			const newFavorites: Favorites = {
+				albums: [],
+				artists: [artistID],
+				tracks: [],
+			};
+			return this.favsService.create(currentUserId, newFavorites);
+		}
+		if (favoritesOfUser.artists.includes(artistID)) {
+			throw new ForbiddenException(
+				`Artist with ID ${artistID} is already in favorites`,
+			);
+		}
+		favoritesOfUser.artists.push(artistID);
+		return this.favsService.update(currentUserId, favoritesOfUser);
+	}
+
+	@Delete('artist/:id')
+	@HttpCode(204)
+	async removeFromFavArtists(
+		@Param('id', new ParseUUIDPipe()) artistId: string,
+	) {
+		const favoritesOfUser: Favorites = await this.favsService.findOne(
+			currentUserId,
+		);
+		const artist = favoritesOfUser.artists.find((id) => id === artistId);
+		if (!artist) {
+			throw new NotFoundException(
+				`Artist with ID ${artistId} not found in favorites`,
+			);
+		}
+		favoritesOfUser.artists = favoritesOfUser.artists.filter(
+			(id) => id !== artistId,
 		);
 
 		this.favsService.update(currentUserId, favoritesOfUser);
