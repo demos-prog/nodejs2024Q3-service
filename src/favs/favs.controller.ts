@@ -55,9 +55,9 @@ export class FavsController {
 		);
 
 		const response: FavoritesResponse = {
-			artists: favArtists,
-			albums: favAlbums,
-			tracks: favTracks,
+			artists: favArtists.filter((item) => item !== null),
+			albums: favAlbums.filter((item) => item !== null),
+			tracks: favTracks.filter((item) => item !== null),
 		};
 
 		return response;
