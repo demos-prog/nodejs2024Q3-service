@@ -64,8 +64,8 @@ export class AlbumController {
 		const res = await this.albumService.remove(id);
 		if (res) {
 			const tracks = await this.trackService.findAll(album.id);
-			tracks.forEach((track) => {
-				this.trackService.update(track.id, { albumId: null });
+			tracks.forEach(async (track) => {
+				await this.trackService.update(track.id, { albumId: null });
 			});
 		}
 	}

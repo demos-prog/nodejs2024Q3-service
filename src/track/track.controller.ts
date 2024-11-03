@@ -47,7 +47,7 @@ export class TrackController {
 		if (!track) {
 			throw new NotFoundException(`Track ID ${id} not found`);
 		}
-		return this.trackService.update(id, dto);
+		return await this.trackService.update(id, dto);
 	}
 
 	@Delete(':id')
@@ -57,6 +57,6 @@ export class TrackController {
 		if (!track) {
 			throw new NotFoundException(`Track ID ${id} not found`);
 		}
-		this.trackService.remove(id);
+		await this.trackService.remove(id);
 	}
 }

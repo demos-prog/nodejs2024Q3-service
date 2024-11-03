@@ -203,6 +203,6 @@ export class FavsController {
 			(id) => id !== artistId,
 		);
 
-		this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(currentUserId, favoritesOfUser);
 	}
 }
