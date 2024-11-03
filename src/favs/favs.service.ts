@@ -32,6 +32,6 @@ export class FavsService {
 	}
 
 	async remove(userId: string) {
-		return `This action removes a #${userId} fav`;
+		return this.prisma.favorites.delete({ where: { userId } });
 	}
 }
