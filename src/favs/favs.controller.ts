@@ -16,6 +16,10 @@ import { TrackService } from 'src/track/track.service';
 import { currentUserId } from 'src/user/user.controller';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
+import { FavoritesResponse } from './dto/response-fav.dto';
+import { Artist } from 'src/artist/entities/artist.entity';
+import { Album } from 'src/album/entities/album.entity';
+import { Track } from 'src/track/entities/track.entity';
 
 @Controller('favs')
 export class FavsController {
@@ -28,7 +32,35 @@ export class FavsController {
 
 	@Get()
 	async findAll() {
-		return this.favsService.findAll();
+		const favoritesOfUser: Favorites = await this.favsService.findOne(
+			currentUserId,
+		);
+
+		const favArtists: Artist[] = await Promise.all(
+			favoritesOfUser.artists.map((artistId) => {
+				return this.artistService.findOne(artistId);
+			}),
+		);
+
+		const favAlbums: Album[] = await Promise.all(
+			favoritesOfUser.albums.map((albumId) => {
+				return this.albumService.findOne(albumId);
+			}),
+		);
+
+		const favTracks: Track[] = await Promise.all(
+			favoritesOfUser.tracks.map((trackId) => {
+				return this.trackService.findOne(trackId);
+			}),
+		);
+
+		const response: FavoritesResponse = {
+			artists: favArtists,
+			albums: favAlbums,
+			tracks: favTracks,
+		};
+
+		return response;
 	}
 
 	@Post('track/:id')
