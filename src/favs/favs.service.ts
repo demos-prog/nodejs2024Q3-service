@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Favorites } from './entities/favorites.entity';
+import { UpdateFavsDto } from './dto/update-fav.dto';
 
 @Injectable()
 export class FavsService {
@@ -12,7 +13,10 @@ export class FavsService {
 		});
 	}
 
-	async findAll() {
+	async findAll(userId?: string) {
+		if (userId) {
+			return this.prisma.favorites.findUnique({ where: { userId } });
+		}
 		return this.prisma.favorites.findMany();
 	}
 
@@ -20,8 +24,11 @@ export class FavsService {
 		return this.prisma.favorites.findUnique({ where: { userId } });
 	}
 
-	async update(userId: string) {
-		return `This action updates a #${userId} fav`;
+	async update(userId: string, dto: UpdateFavsDto) {
+		return this.prisma.favorites.update({
+			where: { userId },
+			data: dto,
+		});
 	}
 
 	async remove(userId: string) {

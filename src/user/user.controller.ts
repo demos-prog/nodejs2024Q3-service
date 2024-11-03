@@ -15,6 +15,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 
+export let currentUserId = '9b7dd582-1be6-448c-8ed2-65195be7c601';
+
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
@@ -41,6 +43,7 @@ export class UserController {
 	@Post()
 	async create(@Body() dto: CreateUserDto) {
 		const user = await this.userService.create(dto);
+		currentUserId = user.id;
 		return {
 			...user,
 			createdAt: new Date(user.createdAt).getTime(),

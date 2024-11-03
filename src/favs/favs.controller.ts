@@ -2,18 +2,25 @@ import {
 	Controller,
 	Get,
 	Post,
-	Body,
 	Param,
 	Delete,
 	ParseUUIDPipe,
+	NotFoundException,
+	ForbiddenException,
+	UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { Track } from 'src/track/entities/track.entity';
 import { Favorites } from './entities/favorites.entity';
+import { TrackService } from 'src/track/track.service';
+import { UpdateFavsDto } from './dto/update-fav.dto';
+import { currentUserId } from 'src/user/user.controller';
 
 @Controller('favs')
 export class FavsController {
-	constructor(private readonly favsService: FavsService) {}
+	constructor(
+		private readonly favsService: FavsService,
+		private readonly trackService: TrackService,
+	) {}
 
 	@Get()
 	async findAll() {
@@ -21,24 +28,31 @@ export class FavsController {
 	}
 
 	@Post('track/:id')
-	async create(
-		@Param('id', new ParseUUIDPipe()) id: string,
-		@Body() track: Track,
-	) {
-		const favorites = await this.favsService.findOne(id);
-		if (!favorites) {
+	async create(@Param('id', new ParseUUIDPipe()) trackId: string) {
+		const track = await this.trackService.findOne(trackId);
+		if (!track) {
+			throw new UnprocessableEntityException(
+				`Track with ID ${trackId} not found`,
+			);
+		}
+		const favoritesOfUser: UpdateFavsDto = await this.favsService.findOne(
+			currentUserId,
+		);
+		if (!favoritesOfUser) {
 			const newFavorites: Favorites = {
 				albums: [],
 				artists: [],
-				tracks: [track.id],
+				tracks: [trackId],
 			};
-			return this.favsService.create(
-				'9b7dd582-1be6-448c-8ed2-65195be7c601',
-				newFavorites,
+			return this.favsService.create(currentUserId, newFavorites);
+		}
+		if (favoritesOfUser.tracks.includes(trackId)) {
+			throw new ForbiddenException(
+				`Track with ID ${trackId} is already in favorites`,
 			);
 		}
-		favorites.tracks.push(track.id);
-		return this.favsService.update(id);
+		favoritesOfUser.tracks.push(trackId);
+		return this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
 	@Delete(':id')
