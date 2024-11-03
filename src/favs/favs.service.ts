@@ -13,6 +13,10 @@ export class FavsService {
 		});
 	}
 
+	async findFirst() {
+		return await this.prisma.favorites.findFirst();
+	}
+
 	async findAll(userId?: string) {
 		if (userId) {
 			return this.prisma.favorites.findUnique({ where: { userId } });

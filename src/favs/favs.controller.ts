@@ -31,7 +31,7 @@ export class FavsController {
 	) {}
 
 	@Get()
-	async findAll() {
+	async findAll(userId?: string) {
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
 			currentUserId,
 		);
@@ -64,23 +64,26 @@ export class FavsController {
 	}
 
 	@Post('track/:id')
-	async addToFavTracks(@Param('id', new ParseUUIDPipe()) trackId: string) {
+	async addToFavTracks(
+		@Param('id', new ParseUUIDPipe()) trackId: string,
+		userId?: string,
+	) {
 		const track = await this.trackService.findOne(trackId);
 		if (!track) {
 			throw new UnprocessableEntityException(
 				`Track with ID ${trackId} not found in favorites`,
 			);
 		}
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+
+		const uId = userId ? userId : currentUserId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		if (!favoritesOfUser) {
 			const newFavorites: Favorites = {
 				albums: [],
 				artists: [],
 				tracks: [trackId],
 			};
-			return await this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(uId, newFavorites);
 		}
 		if (favoritesOfUser.tracks.includes(trackId)) {
 			throw new ForbiddenException(
@@ -88,12 +91,15 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.tracks.push(trackId);
-		return await this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(uId, favoritesOfUser);
 	}
 
 	@Delete('track/:id')
 	@HttpCode(204)
-	async removeFromFavTracks(@Param('id', new ParseUUIDPipe()) trackId: string) {
+	async removeFromFavTracks(
+		@Param('id', new ParseUUIDPipe()) trackId: string,
+		userId?: string,
+	) {
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
 			currentUserId,
 		);
@@ -111,7 +117,10 @@ export class FavsController {
 	}
 
 	@Post('album/:id')
-	async addToFavAlbums(@Param('id', new ParseUUIDPipe()) albumId: string) {
+	async addToFavAlbums(
+		@Param('id', new ParseUUIDPipe()) albumId: string,
+		userId?: string,
+	) {
 		const album = await this.albumService.findOne(albumId);
 		if (!album) {
 			throw new UnprocessableEntityException(
@@ -140,7 +149,10 @@ export class FavsController {
 
 	@Delete('album/:id')
 	@HttpCode(204)
-	async removeFromFavAlbums(@Param('id', new ParseUUIDPipe()) albumId: string) {
+	async removeFromFavAlbums(
+		@Param('id', new ParseUUIDPipe()) albumId: string,
+		userId?: string,
+	) {
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
 			currentUserId,
 		);
@@ -158,7 +170,10 @@ export class FavsController {
 	}
 
 	@Post('artist/:id')
-	async addToFavArtists(@Param('id', new ParseUUIDPipe()) artistID: string) {
+	async addToFavArtists(
+		@Param('id', new ParseUUIDPipe()) artistID: string,
+		userId?: string,
+	) {
 		const artist = await this.artistService.findOne(artistID);
 		if (!artist) {
 			throw new UnprocessableEntityException(
@@ -189,6 +204,7 @@ export class FavsController {
 	@HttpCode(204)
 	async removeFromFavArtists(
 		@Param('id', new ParseUUIDPipe()) artistId: string,
+		userId?: string,
 	) {
 		const favoritesOfUser: Favorites = await this.favsService.findOne(
 			currentUserId,

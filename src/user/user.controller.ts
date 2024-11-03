@@ -15,7 +15,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 
-export let currentUserId = '9b7dd582-1be6-448c-8ed2-65195be7c601';
+export let currentUserId = null;
 
 @Controller('user')
 export class UserController {
