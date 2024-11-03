@@ -8,11 +8,11 @@ import {
 	NotFoundException,
 	ForbiddenException,
 	UnprocessableEntityException,
+	HttpCode,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { Favorites } from './entities/favorites.entity';
 import { TrackService } from 'src/track/track.service';
-import { UpdateFavsDto } from './dto/update-fav.dto';
 import { currentUserId } from 'src/user/user.controller';
 
 @Controller('favs')
@@ -35,7 +35,7 @@ export class FavsController {
 				`Track with ID ${trackId} not found`,
 			);
 		}
-		const favoritesOfUser: UpdateFavsDto = await this.favsService.findOne(
+		const favoritesOfUser: Favorites = await this.favsService.findOne(
 			currentUserId,
 		);
 		if (!favoritesOfUser) {
@@ -55,8 +55,20 @@ export class FavsController {
 		return this.favsService.update(currentUserId, favoritesOfUser);
 	}
 
-	@Delete(':id')
-	async remove(@Param('id') id: string) {
-		return this.favsService.remove(id);
+	@Delete('track/:id')
+	@HttpCode(204)
+	async remove(@Param('id', new ParseUUIDPipe()) trackId: string) {
+		const favoritesOfUser: Favorites = await this.favsService.findOne(
+			currentUserId,
+		);
+		const track = favoritesOfUser.tracks.find((id) => id === trackId);
+		if (!track) {
+			throw new NotFoundException(`Track with ID ${trackId} not found`);
+		}
+		favoritesOfUser.tracks = favoritesOfUser.tracks.filter(
+			(id) => id !== trackId,
+		);
+
+		this.favsService.update(currentUserId, favoritesOfUser);
 	}
 }
