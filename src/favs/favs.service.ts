@@ -6,23 +6,25 @@ import { Favorites } from './entities/favorites.entity';
 export class FavsService {
 	constructor(private prisma: PrismaService) {}
 
-	async create(id: string, userId: string, newFAvs: Favorites) {
-		return this.prisma.favorites.create({ data: { id, userId, ...newFAvs } });
+	async create(userId: string, newFAvs: Favorites) {
+		return this.prisma.favorites.create({
+			data: { userId, ...newFAvs },
+		});
 	}
 
 	async findAll() {
 		return this.prisma.favorites.findMany();
 	}
 
-	async findOne(id: string) {
-		return this.prisma.favorites.findUnique({ where: { id } });
+	async findOne(userId: string) {
+		return this.prisma.favorites.findUnique({ where: { userId } });
 	}
 
-	async update(id: string) {
-		return `This action updates a #${id} fav`;
+	async update(userId: string) {
+		return `This action updates a #${userId} fav`;
 	}
 
-	async remove(id: string) {
-		return `This action removes a #${id} fav`;
+	async remove(userId: string) {
+		return `This action removes a #${userId} fav`;
 	}
 }

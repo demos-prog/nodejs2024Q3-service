@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { UpdateTrackDto } from './dto/update-track.dto';
+import { AlbumService } from 'src/album/album.service';
 
 @Controller('track')
 export class TrackController {
@@ -39,7 +41,7 @@ export class TrackController {
 	@Put(':id')
 	async update(
 		@Param('id', new ParseUUIDPipe()) id: string,
-		@Body() dto: CreateTrackDto,
+		@Body() dto: UpdateTrackDto,
 	) {
 		const track = await this.trackService.findOne(id);
 		if (!track) {

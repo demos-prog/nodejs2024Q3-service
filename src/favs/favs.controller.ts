@@ -33,7 +33,6 @@ export class FavsController {
 				tracks: [track.id],
 			};
 			return this.favsService.create(
-				id,
 				'9b7dd582-1be6-448c-8ed2-65195be7c601',
 				newFavorites,
 			);

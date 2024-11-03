@@ -62,12 +62,10 @@ export class ArtistController {
 		}
 		const res = await this.artistService.remove(id);
 		if (res) {
-			const albums = await this.albumService.findAll();
-			albums
-				.filter((album) => album.artistId === id)
-				.forEach((album) => {
-					this.albumService.update(album.id, { artistId: null });
-				});
+			const albums = await this.albumService.findAll(artist.id);
+			albums.forEach((album) => {
+				this.albumService.update(album.id, { artistId: null });
+			});
 		}
 	}
 }

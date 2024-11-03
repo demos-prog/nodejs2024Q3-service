@@ -11,7 +11,10 @@ export class AlbumService {
 		return this.prisma.album.create({ data: createAlbumDto });
 	}
 
-	async findAll() {
+	async findAll(artistId?: string) {
+		if (artistId) {
+			return this.prisma.album.findMany({ where: { artistId } });
+		}
 		return this.prisma.album.findMany();
 	}
 
