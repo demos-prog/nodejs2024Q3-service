@@ -16,27 +16,29 @@ npm i
 
 !!! BEFORE STARTING !!!
 
-1. Rename the '.env.example' file to '.env'
+1. Change current work branch to `dev`
 
-2. run:
+2. Rename the `.env.example` file to `.env`
+
+3. run:
 
 ```
 npx prisma migrate dev --name init
 ```
 
-3. run:
+4. run:
 
 ```
 npm run seed
 ```
 
-4. Start the server
+5. Start the server
 
 ```
 npm start
 ```
 
-5. Run tests in a separate terminal
+6. Run tests in a separate terminal
 
 ```
 npm run test
