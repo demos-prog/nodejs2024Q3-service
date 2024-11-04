@@ -13,7 +13,6 @@ import {
 import { FavsService } from './favs.service';
 import { Favorites } from './entities/favorites.entity';
 import { TrackService } from 'src/track/track.service';
-import { currentUserId } from 'src/user/user.controller';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { FavoritesResponse } from './dto/response-fav.dto';
@@ -32,9 +31,9 @@ export class FavsController {
 
 	@Get()
 	async findAll(userId?: string) {
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 
 		const favArtists: Artist[] = await Promise.all(
 			favoritesOfUser.artists.map((artistId) => {
@@ -75,7 +74,8 @@ export class FavsController {
 			);
 		}
 
-		const uId = userId ? userId : currentUserId;
+		const uId = (await this.favsService.findFirst()).userId;
+
 		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		if (!favoritesOfUser) {
 			const newFavorites: Favorites = {
@@ -100,9 +100,8 @@ export class FavsController {
 		@Param('id', new ParseUUIDPipe()) trackId: string,
 		userId?: string,
 	) {
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		const track = favoritesOfUser.tracks.find((id) => id === trackId);
 		if (!track) {
 			throw new NotFoundException(
@@ -113,7 +112,7 @@ export class FavsController {
 			(id) => id !== trackId,
 		);
 
-		await this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(uId, favoritesOfUser);
 	}
 
 	@Post('album/:id')
@@ -127,16 +126,15 @@ export class FavsController {
 				`Album with ID ${albumId} not found in favorites`,
 			);
 		}
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		if (!favoritesOfUser) {
 			const newFavorites: Favorites = {
 				albums: [albumId],
 				artists: [],
 				tracks: [],
 			};
-			return await this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(uId, newFavorites);
 		}
 		if (favoritesOfUser.albums.includes(albumId)) {
 			throw new ForbiddenException(
@@ -144,7 +142,7 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.albums.push(albumId);
-		return await this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(uId, favoritesOfUser);
 	}
 
 	@Delete('album/:id')
@@ -153,9 +151,8 @@ export class FavsController {
 		@Param('id', new ParseUUIDPipe()) albumId: string,
 		userId?: string,
 	) {
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		const album = favoritesOfUser.albums.find((id) => id === albumId);
 		if (!album) {
 			throw new NotFoundException(
@@ -166,7 +163,7 @@ export class FavsController {
 			(id) => id !== albumId,
 		);
 
-		await this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(uId, favoritesOfUser);
 	}
 
 	@Post('artist/:id')
@@ -180,16 +177,15 @@ export class FavsController {
 				`Artist with ID ${artistID} not found in favorites`,
 			);
 		}
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		if (!favoritesOfUser) {
 			const newFavorites: Favorites = {
 				albums: [],
 				artists: [artistID],
 				tracks: [],
 			};
-			return await this.favsService.create(currentUserId, newFavorites);
+			return await this.favsService.create(uId, newFavorites);
 		}
 		if (favoritesOfUser.artists.includes(artistID)) {
 			throw new ForbiddenException(
@@ -197,7 +193,7 @@ export class FavsController {
 			);
 		}
 		favoritesOfUser.artists.push(artistID);
-		return await this.favsService.update(currentUserId, favoritesOfUser);
+		return await this.favsService.update(uId, favoritesOfUser);
 	}
 
 	@Delete('artist/:id')
@@ -206,9 +202,8 @@ export class FavsController {
 		@Param('id', new ParseUUIDPipe()) artistId: string,
 		userId?: string,
 	) {
-		const favoritesOfUser: Favorites = await this.favsService.findOne(
-			currentUserId,
-		);
+		const uId = (await this.favsService.findFirst()).userId;
+		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 		const artist = favoritesOfUser.artists.find((id) => id === artistId);
 		if (!artist) {
 			throw new NotFoundException(
@@ -219,6 +214,6 @@ export class FavsController {
 			(id) => id !== artistId,
 		);
 
-		await this.favsService.update(currentUserId, favoritesOfUser);
+		await this.favsService.update(uId, favoritesOfUser);
 	}
 }

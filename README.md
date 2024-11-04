@@ -34,25 +34,7 @@ npm run seed
 npm start
 ```
 
-3. Create a User manualy (using Postman):
-
-- method: POST
-- url: http://localhost:4000/user
-- body: {"login": "userName", "password": "userPassword"}
-
-4. Create a Track manualy (using Postman):
-
-- method: POST
-- url: http://localhost:4000/track
-- body: {"name": "trackName", "duration": 123}
-- Save the returned trackId
-
-5. Create a Favorites List manualy (using Postman):
-
-- method: POST
-- url: http://localhost:4000/favs/track/"trackId"
-
-6. Run tests in a separate terminal
+3. Run tests in a separate terminal
 
 ```
 npm run test

@@ -35,5 +35,6 @@ main()
 		process.exit(1);
 	})
 	.finally(async () => {
+		console.log('Seeding is done !');
 		await prisma.$disconnect();
 	});
