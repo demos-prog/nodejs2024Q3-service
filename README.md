@@ -22,19 +22,27 @@ npm start
 
 !!! BEFORE STARTING TESTS !!!
 
-1. run:
+1. Rename the '.env.example' file to '.env'
+
+2. run:
+
+```
+npx prisma migrate dev --name init
+```
+
+3. run:
 
 ```
 npm run seed
 ```
 
-2. Start the server
+4. Start the server
 
 ```
 npm start
 ```
 
-3. Run tests in a separate terminal
+5. Run tests in a separate terminal
 
 ```
 npm run test
