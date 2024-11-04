@@ -3,24 +3,18 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/demos-prog/nodejs2024Q3-service.git
 ```
 
 ## Installing NPM modules
 
 ```
-npm install
+npm i
 ```
 
-## Running application
+## Testing and running
 
-```
-npm start
-```
-
-## Testing
-
-!!! BEFORE STARTING TESTS !!!
+!!! BEFORE STARTING !!!
 
 1. Rename the '.env.example' file to '.env'
 
@@ -46,4 +40,10 @@ npm start
 
 ```
 npm run test
+```
+
+## Running application
+
+```
+npm start
 ```
