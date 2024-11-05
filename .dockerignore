@@ -1,19 +1,16 @@
-# Ignore the .git directory
 .git
+.DS_Store
+**/node_modules/
+npm-debug.log
+.coverage
+.coverage.*
 
-# Ignore node_modules
-node_modules
-
-# Ignore log files
 *.log
 
-# Ignore temporary files
-tmp/
-temp/
+tmp
+temp
 
-# Ignore build outputs
-dist/
-build/
+**/dist
+**/build
 
-# Ignore environment variable files
 .env
