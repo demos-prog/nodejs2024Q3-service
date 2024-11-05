@@ -1,0 +1,26 @@
+services:
+  nest-app:
+    container_name: nest
+    build: ./
+    ports:
+      - "4000:4000"
+    depends_on:
+      - my_postgress
+    environment:
+      DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDNiZGNlNDYtZTRlOS00ZTQ4LWE1MGQtZDc0MzBjM2JhMDg1IiwidGVuYW50X2lkIjoiMDBlYTQ1N2ZkNWI3Nzg5NjNmNmNhMjY1MWYwOGQ4ODM3NDMwYmJkYjdhZDM1MWJkNGEzZDdlNzg3MTIxN2YxMSIsImludGVybmFsX3NlY3JldCI6ImM1YjEwODg5LWNjNTktNDAxYy05NzllLTVlOTU2N2U3YzFhMyJ9.0vWVenI5SyG6MOdUtDF69PmTYRatnxMux136zotDX-Y
+    command: sh -c "npx prisma generate --no-engine && npm start"
+
+  my_postgress:
+    container_name: my_postgress
+    build: ./prisma
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+      DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDNiZGNlNDYtZTRlOS00ZTQ4LWE1MGQtZDc0MzBjM2JhMDg1IiwidGVuYW50X2lkIjoiMDBlYTQ1N2ZkNWI3Nzg5NjNmNmNhMjY1MWYwOGQ4ODM3NDMwYmJkYjdhZDM1MWJkNGEzZDdlNzg3MTIxN2YxMSIsImludGVybmFsX3NlY3JldCI6ImM1YjEwODg5LWNjNTktNDAxYy05NzllLTVlOTU2N2U3YzFhMyJ9.0vWVenI5SyG6MOdUtDF69PmTYRatnxMux136zotDX-Y
+      PULSE_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDNiZGNlNDYtZTRlOS00ZTQ4LWE1MGQtZDc0MzBjM2JhMDg1IiwidGVuYW50X2lkIjoiMDBlYTQ1N2ZkNWI3Nzg5NjNmNmNhMjY1MWYwOGQ4ODM3NDMwYmJkYjdhZDM1MWJkNGEzZDdlNzg3MTIxN2YxMSIsImludGVybmFsX3NlY3JldCI6ImM1YjEwODg5LWNjNTktNDAxYy05NzllLTVlOTU2N2U3YzFhMyJ9.0vWVenI5SyG6MOdUtDF69PmTYRatnxMux136zotDX-Y
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
