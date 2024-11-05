@@ -1,4 +1,4 @@
-FROM postgres:13
+FROM postgres:13-alpine3.20
 
 COPY ./migrations /docker-entrypoint-initdb.d/migrations
 

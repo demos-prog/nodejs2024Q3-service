@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:lts-alpine3.20
 
 COPY ["package.json", "package-lock.json", "./"]
 COPY prisma ./prisma
