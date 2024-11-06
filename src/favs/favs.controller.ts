@@ -36,20 +36,20 @@ export class FavsController {
 		const favoritesOfUser: Favorites = await this.favsService.findOne(uId);
 
 		const favArtists: Artist[] = await Promise.all(
-			favoritesOfUser.artists.map((artistId) => {
-				return this.artistService.findOne(artistId);
+			favoritesOfUser.artists.map(async (artistId) => {
+				return await this.artistService.findOne(artistId);
 			}),
 		);
 
 		const favAlbums: Album[] = await Promise.all(
-			favoritesOfUser.albums.map((albumId) => {
-				return this.albumService.findOne(albumId);
+			favoritesOfUser.albums.map(async (albumId) => {
+				return await this.albumService.findOne(albumId);
 			}),
 		);
 
 		const favTracks: Track[] = await Promise.all(
-			favoritesOfUser.tracks.map((trackId) => {
-				return this.trackService.findOne(trackId);
+			favoritesOfUser.tracks.map(async (trackId) => {
+				return await this.trackService.findOne(trackId);
 			}),
 		);
 
