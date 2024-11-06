@@ -10,6 +10,8 @@ services:
       DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDNiZGNlNDYtZTRlOS00ZTQ4LWE1MGQtZDc0MzBjM2JhMDg1IiwidGVuYW50X2lkIjoiMDBlYTQ1N2ZkNWI3Nzg5NjNmNmNhMjY1MWYwOGQ4ODM3NDMwYmJkYjdhZDM1MWJkNGEzZDdlNzg3MTIxN2YxMSIsImludGVybmFsX3NlY3JldCI6ImM1YjEwODg5LWNjNTktNDAxYy05NzllLTVlOTU2N2U3YzFhMyJ9.0vWVenI5SyG6MOdUtDF69PmTYRatnxMux136zotDX-Y
     command: sh -c "npx prisma generate --no-engine && npm start"
     restart: always
+    networks:
+      - user-defined
 
   postgress:
     container_name: prisma_postgress
@@ -23,6 +25,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    networks:
+      - user-defined
 
 volumes:
   postgres_data:
+
+networks:
+  user-defined:
+    driver: bridge
