@@ -6,6 +6,8 @@ services:
       - "4000:4000"
     depends_on:
       - postgress
+    volumes:
+      - app_logs:/var/log/app
     environment:
       DATABASE_URL: prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDNiZGNlNDYtZTRlOS00ZTQ4LWE1MGQtZDc0MzBjM2JhMDg1IiwidGVuYW50X2lkIjoiMDBlYTQ1N2ZkNWI3Nzg5NjNmNmNhMjY1MWYwOGQ4ODM3NDMwYmJkYjdhZDM1MWJkNGEzZDdlNzg3MTIxN2YxMSIsImludGVybmFsX3NlY3JldCI6ImM1YjEwODg5LWNjNTktNDAxYy05NzllLTVlOTU2N2U3YzFhMyJ9.0vWVenI5SyG6MOdUtDF69PmTYRatnxMux136zotDX-Y
     command: sh -c "npx prisma generate --no-engine && npm start"
@@ -30,6 +32,7 @@ services:
 
 volumes:
   postgres_data:
+  app_logs:
 
 networks:
   user-defined:
