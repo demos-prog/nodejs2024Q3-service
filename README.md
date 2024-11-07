@@ -6,39 +6,39 @@
 git clone https://github.com/demos-prog/nodejs2024Q3-service.git
 ```
 
-## Installing NPM modules
-
-```
-npm i
-```
-
 ## Testing and running
 
 !!! BEFORE STARTING !!!
 
 1. Change current work branch to `dev`
 
-2. Rename the `.env.example` file to `.env`
+2. run:
 
-3. run:
+```
+npm i
+```
+
+3. Rename the `.env.example` file to `.env`
+
+4. run:
 
 ```
 npx prisma migrate dev --name init
 ```
 
-4. run:
+5. run:
 
 ```
 npm run seed
 ```
 
-5. Start the server
+6. Start the server
 
 ```
 npm start
 ```
 
-6. Run tests in a separate terminal
+7. Run tests in a separate terminal
 
 ```
 npm run test
@@ -50,7 +50,7 @@ npm run test
 npm start
 ```
 
-## Running Docker
+## Running application in Docker
 
 ```
 npm run start:docker
