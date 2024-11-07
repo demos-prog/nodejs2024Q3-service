@@ -13,7 +13,7 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { TrackService } from 'src/track/track.service';
+import { TrackService } from '../track/track.service';
 
 @Controller('album')
 export class AlbumController {

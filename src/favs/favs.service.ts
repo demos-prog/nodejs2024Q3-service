@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { Favorites } from './entities/favorites.entity';
 import { UpdateFavsDto } from './dto/update-fav.dto';
 

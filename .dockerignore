@@ -1,0 +1,16 @@
+.git
+.DS_Store
+**/node_modules/
+npm-debug.log
+.coverage
+.coverage.*
+
+*.log
+
+tmp
+temp
+
+**/dist
+**/build
+
+.env
