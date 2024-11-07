@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { FavsController } from './favs.controller';
-import { PrismaModule } from 'src/prisma.module';
-import { TrackService } from 'src/track/track.service';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
+import { PrismaModule } from '../prisma.module';
+import { TrackService } from '../track/track.service';
+import { AlbumService } from '../album/album.service';
+import { ArtistService } from '../artist/artist.service';
 
 @Module({
 	imports: [PrismaModule],
