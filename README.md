@@ -49,3 +49,9 @@ npm run test
 ```
 npm start
 ```
+
+## Running Docker
+
+```
+npm run start:docker
+```
