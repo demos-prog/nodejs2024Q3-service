@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 import { PrismaService } from '../prisma.service';
+import { creatHash } from './helpers/createHash';
 
 @Injectable()
 export class UserService {
@@ -25,9 +26,20 @@ export class UserService {
 		});
 	}
 
+	async getBylogin(login: string) {
+		return await this.prisma.user.findFirst({
+			where: { login },
+		});
+	}
+
 	async create(dto: CreateUserDto) {
+		const newUser: CreateUserDto = {
+			login: dto.login,
+			password: creatHash(dto.password),
+		};
+
 		return this.prisma.user.create({
-			data: { ...dto, version: 1 },
+			data: { ...newUser, version: 1 },
 			select: {
 				id: true,
 				login: true,
