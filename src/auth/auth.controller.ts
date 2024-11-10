@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/CreateUser.dto';
 import { UserService } from '../user/user.service';
 import comparePassword from '../helpers/compareHash';
+import { Public } from 'src/decorators/Publick';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
 		private readonly userService: UserService,
 	) {}
 
+	@Public()
 	@Post('signup')
 	async create(@Body() createUserDto: CreateUserDto) {
 		const user = await this.userService.getBylogin(createUserDto.login);
@@ -26,6 +28,7 @@ export class AuthController {
 		return await this.userService.create(createUserDto);
 	}
 
+	@Public()
 	@Post('login')
 	@HttpCode(200)
 	async login(@Body() loginDto: CreateUserDto) {
