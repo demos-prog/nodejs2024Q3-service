@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 
 export default function comparePassword(
-	hash: string,
+	existingPassword: string,
 	recievedPassword: string,
 ) {
-	return bcrypt.compareSync(recievedPassword, hash);
+	return bcrypt.compareSync(recievedPassword, existingPassword);
 }

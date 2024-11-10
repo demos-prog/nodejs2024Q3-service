@@ -10,17 +10,21 @@ import {
 	ParseUUIDPipe,
 	Post,
 	Put,
+	UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
-import comparePassword from './helpers/compareHash';
-import { creatHash } from './helpers/createHash';
+import comparePassword from '../helpers/compareHash';
+import { creatHash } from '../helpers/createHash';
+import { AuthGuard } from '../auth/auth.guard';
+import { Public } from '../decorators/Publick';
 
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
+	@Public()
 	@Get()
 	async getAll() {
 		return await this.userService.getAll();

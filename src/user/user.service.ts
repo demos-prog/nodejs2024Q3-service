@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 import { PrismaService } from '../prisma.service';
-import { creatHash } from './helpers/createHash';
+import { creatHash } from '../helpers/createHash';
 
 @Injectable()
 export class UserService {
