@@ -9,7 +9,7 @@ import {
 	ForbiddenException,
 	UnprocessableEntityException,
 	HttpCode,
-	ExecutionContext,
+	Request,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { Favorites } from './entities/favorites.entity';
@@ -31,11 +31,13 @@ export class FavsController {
 	) {}
 
 	@Get()
-	async findAll(context: ExecutionContext) {
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+	async findAll(@Request() req) {
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
+		if (!favoritesOfUser) {
+			throw new NotFoundException('Favorites not found');
+		}
 
 		const favArtists: Artist[] = await Promise.all(
 			favoritesOfUser.artists.map(async (artistId) => {
@@ -67,7 +69,7 @@ export class FavsController {
 	@Post('track/:id')
 	async addToFavTracks(
 		@Param('id', new ParseUUIDPipe()) trackId: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
 		const track = await this.trackService.findOne(trackId);
 		if (!track) {
@@ -76,8 +78,7 @@ export class FavsController {
 			);
 		}
 
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		if (!favoritesOfUser) {
@@ -101,10 +102,9 @@ export class FavsController {
 	@HttpCode(204)
 	async removeFromFavTracks(
 		@Param('id', new ParseUUIDPipe()) trackId: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		const track = favoritesOfUser.tracks.find((id) => id === trackId);
@@ -123,7 +123,7 @@ export class FavsController {
 	@Post('album/:id')
 	async addToFavAlbums(
 		@Param('id', new ParseUUIDPipe()) albumId: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
 		const album = await this.albumService.findOne(albumId);
 		if (!album) {
@@ -132,8 +132,7 @@ export class FavsController {
 			);
 		}
 
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		if (!favoritesOfUser) {
@@ -157,10 +156,9 @@ export class FavsController {
 	@HttpCode(204)
 	async removeFromFavAlbums(
 		@Param('id', new ParseUUIDPipe()) albumId: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		const album = favoritesOfUser.albums.find((id) => id === albumId);
@@ -179,7 +177,7 @@ export class FavsController {
 	@Post('artist/:id')
 	async addToFavArtists(
 		@Param('id', new ParseUUIDPipe()) artistID: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
 		const artist = await this.artistService.findOne(artistID);
 		if (!artist) {
@@ -188,8 +186,7 @@ export class FavsController {
 			);
 		}
 
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		if (!favoritesOfUser) {
@@ -213,10 +210,10 @@ export class FavsController {
 	@HttpCode(204)
 	async removeFromFavArtists(
 		@Param('id', new ParseUUIDPipe()) artistId: string,
-		context: ExecutionContext,
+		@Request() req,
 	) {
-		const request = context.switchToHttp().getRequest();
-		const userId = request.session.userId;
+		const userId = req.user.userId;
+
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
 		const artist = favoritesOfUser.artists.find((id) => id === artistId);
 		if (!artist) {
