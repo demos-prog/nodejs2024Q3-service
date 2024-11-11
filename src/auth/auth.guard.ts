@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
-import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../decorators/Publick';
 
 @Injectable()
@@ -23,23 +22,23 @@ export class AuthGuard implements CanActivate {
 		}
 
 		const request = context.switchToHttp().getRequest();
-		const token = this.extractTokenFromHeader(request);
-		if (!token) {
-			throw new UnauthorizedException();
-		}
-		try {
-			const payload = await this.jwtService.verifyAsync(token, {
-				secret: process.env.JWT_SECRET_KEY,
-			});
-			request['user'] = payload;
-		} catch {
-			throw new UnauthorizedException();
-		}
-		return true;
-	}
+		const authHeader = request.headers['authorization'];
 
-	private extractTokenFromHeader(request: Request): string | undefined {
-		const [type, token] = request.headers.authorization?.split(' ') ?? [];
-		return type === 'Bearer' ? token : undefined;
+		if (!authHeader || !authHeader.startsWith('Bearer ')) {
+			throw new UnauthorizedException(
+				'Authorization header missing or invalid',
+			);
+		}
+
+		const token = authHeader.split(' ')[1];
+
+		try {
+			const payload = await this.jwtService.verifyAsync(token);
+			request['user'] = payload;
+		} catch (error) {
+			throw new UnauthorizedException('Invalid or expired token');
+		}
+
+		return true;
 	}
 }

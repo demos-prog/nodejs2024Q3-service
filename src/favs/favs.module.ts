@@ -9,6 +9,11 @@ import { ArtistService } from '../artist/artist.service';
 @Module({
 	imports: [PrismaModule],
 	controllers: [FavsController],
-	providers: [FavsService, TrackService, AlbumService, ArtistService],
+	providers: [
+		FavsService,
+		TrackService,
+		AlbumService,
+		ArtistService
+	],
 })
 export class FavsModule {}

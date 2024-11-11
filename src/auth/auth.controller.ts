@@ -10,6 +10,7 @@ import { CreateUserDto } from '../user/dto/CreateUser.dto';
 import { UserService } from '../user/user.service';
 import comparePassword from '../helpers/compareHash';
 import { Public } from 'src/decorators/Publick';
+import { RefreshTokenDto } from './dto/RefreshToken.dt';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +26,12 @@ export class AuthController {
 		if (user) {
 			throw new ForbiddenException('User already exists');
 		}
-		return await this.userService.create(createUserDto);
+		const newUser = await this.userService.create(createUserDto);
+		return {
+			...newUser,
+			createdAt: new Date(newUser.createdAt).getTime(),
+			updatedAt: new Date(newUser.updatedAt).getTime(),
+		};
 	}
 
 	@Public()
@@ -39,6 +45,14 @@ export class AuthController {
 		if (!comparePassword(user.password, loginDto.password)) {
 			throw new ForbiddenException('Incorrect password');
 		}
-		return await this.authService.signIn(user.id, loginDto.login);
+
+		return await this.authService.logIn(user.id, loginDto.login);;
+	}
+
+	@Public()
+	@Post('refresh')
+	@HttpCode(200)
+	async refresh(@Body() dto: RefreshTokenDto) {
+		return await this.authService.refreshToken(dto.refreshToken);
 	}
 }

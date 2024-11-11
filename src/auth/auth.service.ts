@@ -1,21 +1,40 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-	constructor(
-		private usersService: UserService,
-		private jwtService: JwtService,
-	) {}
+	constructor(private jwtService: JwtService) {}
 
-	async signIn(
+	async logIn(
 		userId: string,
 		login: string,
-	): Promise<{ access_token: string }> {
+	): Promise<{
+		accessToken: string;
+		refreshToken: string;
+		userId: string;
+		login: string;
+	}> {
 		const payload = { userId, login };
 		return {
-			access_token: await this.jwtService.signAsync(payload),
+			userId,
+			login,
+			accessToken: await this.jwtService.signAsync(payload, {
+				expiresIn: process.env.TOKEN_EXPIRE_TIME || '1h',
+			}),
+			refreshToken: await this.jwtService.signAsync(payload, {
+				expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME || '24h',
+			}),
 		};
+	}
+
+	async refreshToken(oldRefreshToken: string) {
+		try {
+			const { userId, login } = await this.jwtService.verifyAsync(
+				oldRefreshToken,
+			);
+			return this.logIn(userId, login);
+		} catch (e) {
+			return new UnauthorizedException('Invalid or expired token');
+		}
 	}
 }
