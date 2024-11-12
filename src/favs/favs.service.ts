@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Favorites } from './entities/favorites.entity';
 import { UpdateFavsDto } from './dto/update-fav.dto';
@@ -36,6 +36,10 @@ export class FavsService {
 	}
 
 	async remove(userId: string) {
+		const favoritesOfUser: Favorites = await this.findOne(userId);
+		if (!favoritesOfUser) {
+			throw new NotFoundException(`Favorites of user ID ${userId} not found`);
+		}
 		return this.prisma.favorites.delete({ where: { userId } });
 	}
 }

@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { creatHash } from '../helpers/createHash';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class UserService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly favService: FavsService,
+	) {}
 
 	async getAll() {
 		return this.prisma.user.findMany({
@@ -69,6 +73,12 @@ export class UserService {
 	}
 
 	async delete(userId: string) {
+		const user = await this.getById(userId);
+		if (!user) {
+			throw new NotFoundException(`User with ID ${userId} not found`);
+		}
+
+		await this.favService.remove(userId);
 		return this.prisma.user.delete({ where: { id: userId } });
 	}
 }
