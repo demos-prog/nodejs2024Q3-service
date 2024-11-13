@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
+import { IsNotEmptyWithStatusCode } from 'src/decorators/IsNotEmpty';
 
 export class RefreshTokenDto {
-	@IsNotEmpty()
+	@IsNotEmptyWithStatusCode(401)
 	@IsString()
 	refreshToken: string;
 }

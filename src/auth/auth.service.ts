@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+	ForbiddenException,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -28,13 +32,25 @@ export class AuthService {
 	}
 
 	async refreshToken(oldRefreshToken: string) {
+		if (!oldRefreshToken) {
+			throw new UnauthorizedException('RefreshToken should be provided');
+		}
+
+		if (!this.isValidTokenFormat(oldRefreshToken)) {
+			throw new ForbiddenException('Invalid token');
+		}
 		try {
 			const { userId, login } = await this.jwtService.verifyAsync(
 				oldRefreshToken,
 			);
 			return this.logIn(userId, login);
 		} catch (e) {
-			return new UnauthorizedException('Invalid or expired token');
+			throw new ForbiddenException('Invalid or expired token');
 		}
+	}
+
+	private isValidTokenFormat(token: string): boolean {
+		const tokenParts = token.split('.');
+		return tokenParts.length === 3;
 	}
 }
