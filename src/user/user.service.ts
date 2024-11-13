@@ -42,7 +42,7 @@ export class UserService {
 			password: creatHash(dto.password),
 		};
 
-		return this.prisma.user.create({
+		const createdUser = await this.prisma.user.create({
 			data: { ...newUser, version: 1 },
 			select: {
 				id: true,
@@ -52,6 +52,14 @@ export class UserService {
 				updatedAt: true,
 			},
 		});
+
+		this.favService.create(createdUser.id, {
+			artists: [],
+			albums: [],
+			tracks: [],
+		});
+
+		return createdUser;
 	}
 
 	async updatePassword(
