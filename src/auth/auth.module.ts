@@ -12,6 +12,12 @@ import { FavsService } from 'src/favs/favs.service';
 		JwtModule.register({
 			global: true,
 			secret: process.env.JWT_SECRET_KEY,
+			signOptions: { expiresIn: process.env.TOKEN_EXPIRE_TIME || '1h' },
+		}),
+		JwtModule.register({
+			global: true,
+			secret: process.env.JWT_SECRET_REFRESH_KEY,
+			signOptions: { expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME || '24h' },
 		}),
 	],
 	controllers: [AuthController],
