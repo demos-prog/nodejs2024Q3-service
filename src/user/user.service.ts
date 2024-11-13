@@ -77,8 +77,10 @@ export class UserService {
 		if (!user) {
 			throw new NotFoundException(`User with ID ${userId} not found`);
 		}
-
-		await this.favService.remove(userId);
+		const favoritesOfUser = await this.favService.findOne(userId);
+		if (favoritesOfUser) {
+			await this.favService.remove(userId);
+		}
 		return this.prisma.user.delete({ where: { id: userId } });
 	}
 }
