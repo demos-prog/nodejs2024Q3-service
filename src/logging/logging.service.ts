@@ -2,9 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class LoggingService {
-	private readonly logger = new Logger(LoggingService.name);
+	private readonly logger: Logger;
+	private readonly logLevel: string;
 
 	constructor() {
+		this.logLevel = process.env.LOG_LEVEL || 'log';
+		this.logger = new Logger(LoggingService.name);
+
 		process.on('uncaughtException', (error) => {
 			this.logError('Uncaught Exception', error);
 		});
@@ -15,7 +19,8 @@ export class LoggingService {
 	}
 
 	logRequest(url: string, query: any, body: any) {
-		this.logger.log(
+		this.log(
+			'log',
 			`Request - URL: ${url}, Query: ${JSON.stringify(
 				query,
 			)}, Body: ${JSON.stringify(body)}`,
@@ -23,10 +28,34 @@ export class LoggingService {
 	}
 
 	logResponse(url: string, statusCode: number) {
-		this.logger.log(`Response - URL: ${url}, Status Code: ${statusCode}`);
+		this.log('log', `Response - URL: ${url}, Status Code: ${statusCode}`);
 	}
 
 	logError(type: string, error: any) {
-		this.logger.error(`${type} - ${JSON.stringify(error)}`);
+		this.log('error', `${type} - ${JSON.stringify(error)}`);
+	}
+
+	private log(level: string, message: string) {
+		if (this.shouldLog(level)) {
+			switch (level) {
+				case 'error':
+					this.logger.error(message);
+					break;
+				case 'warn':
+					this.logger.warn(message);
+					break;
+				case 'log':
+				default:
+					this.logger.log(message);
+					break;
+			}
+		}
+	}
+
+	private shouldLog(level: string): boolean {
+		const levels = ['log', 'warn', 'error'];
+		const currentLevelIndex = levels.indexOf(this.logLevel);
+		const messageLevelIndex = levels.indexOf(level);
+		return messageLevelIndex >= currentLevelIndex;
 	}
 }
