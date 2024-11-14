@@ -3,7 +3,7 @@ FROM node:lts-alpine3.20
 WORKDIR /app
 
 COPY ["package.json", "package-lock.json", "./"]
-COPY /prisma /app/prisma
+# COPY /prisma /app/prisma
 
 RUN npm install
 RUN npm i -g prisma

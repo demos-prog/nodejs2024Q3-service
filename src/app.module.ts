@@ -9,6 +9,8 @@ import { FavsModule } from './favs/favs.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { LoggingService } from './logging/logging.service';
+import { LoggingModule } from './logging/logging.module';
 
 @Module({
 	imports: [
@@ -18,6 +20,7 @@ import { AuthGuard } from './auth/auth.guard';
 		AlbumModule,
 		FavsModule,
 		AuthModule,
+		LoggingModule,
 	],
 	controllers: [AppController],
 	providers: [
@@ -26,6 +29,7 @@ import { AuthGuard } from './auth/auth.guard';
 			provide: APP_GUARD,
 			useClass: AuthGuard,
 		},
+		LoggingService,
 	],
 })
 export class AppModule {}

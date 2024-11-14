@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/CreateUser.dto';
 import { UserService } from '../user/user.service';
 import comparePassword from '../helpers/compareHash';
-import { Public } from 'src/decorators/Publick';
+import { Public } from '../decorators/Publick';
 import { RefreshTokenDto } from './dto/RefreshToken.dt';
 
 @Controller('auth')

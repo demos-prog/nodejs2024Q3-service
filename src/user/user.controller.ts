@@ -16,7 +16,6 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
 import comparePassword from '../helpers/compareHash';
 import { creatHash } from '../helpers/createHash';
-import { Public } from '../decorators/Publick';
 
 @Controller('user')
 export class UserController {
