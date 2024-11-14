@@ -29,7 +29,6 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.6",
     "@nestjs/platform-express": "^10.4.7",
-    "@nestjs/schematics": "^10.2.3",
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
@@ -44,7 +43,6 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/express": "^5.0.0",
     "@types/jest": "27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^16.0.0",
