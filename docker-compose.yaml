@@ -1,8 +1,8 @@
 services:
   nest-app:
     container_name: nest_app
-    # build: ./
-    image: dmitrywebwell/nodejs2024q3-service-nest-app:latest
+    build: ./
+    # image: dmitrywebwell/nodejs2024q3-service-nest-app:latest
     ports:
       - "4000:4000"
     depends_on:
@@ -17,9 +17,9 @@ services:
       - user-defined
 
   postgress:
-    container_name: prisma_postgress
-    # build: ./prisma
-    image: dmitrywebwell/nodejs2024q3-service-postgress:latest
+    container_name: postgress
+    build: ./prisma
+    # image: dmitrywebwell/nodejs2024q3-service-postgress:latest
     environment:
       PG_DATA: /var/lib/postgresql/data
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

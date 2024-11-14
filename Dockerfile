@@ -10,7 +10,7 @@ RUN npm i -g prisma
 
 COPY . .
 
-RUN npx prisma generate --schema ./prisma/schema.prisma
+# RUN npx prisma generate --no-engine --schema ./prisma/schema.prisma
 
 EXPOSE 4000
 

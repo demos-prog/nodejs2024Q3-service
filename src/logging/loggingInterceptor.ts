@@ -4,8 +4,8 @@ import {
 	ExecutionContext,
 	CallHandler,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { LoggingService } from './logging.service';
 
 @Injectable()
@@ -24,6 +24,10 @@ export class LoggingInterceptor implements NestInterceptor {
 			tap(() => {
 				const statusCode = response.statusCode;
 				this.loggingService.logResponse(url, statusCode);
+			}),
+			catchError((error) => {
+				this.loggingService.logError('Error', error);
+				return throwError(() => error);
 			}),
 		);
 	}
