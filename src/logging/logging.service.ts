@@ -1,12 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class LoggingService {
 	private readonly logger: Logger;
 	private readonly logLevel: string;
+	private readonly maxFileSize: number;
+	private readonly logFilePath: string;
+	private readonly errorLogFilePath: string;
 
 	constructor() {
 		this.logLevel = process.env.LOG_LEVEL || 'log';
+		this.maxFileSize =
+			(parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024) * 1024;
+		this.logFilePath = path.join(__dirname, 'application.log');
+		this.errorLogFilePath = path.join(__dirname, 'error.log');
 		this.logger = new Logger(LoggingService.name);
 
 		process.on('uncaughtException', (error) => {
@@ -37,19 +46,49 @@ export class LoggingService {
 
 	private log(level: string, message: string) {
 		if (this.shouldLog(level)) {
-			switch (level) {
-				case 'error':
-					this.logger.error(message);
-					break;
-				case 'warn':
-					this.logger.warn(message);
-					break;
-				case 'log':
-				default:
-					this.logger.log(message);
-					break;
-			}
+			const logMessage = `${new Date().toISOString()} [${level}] ${message}\n`;
+			this.writeLogToFile(level, logMessage);
 		}
+	}
+
+	private writeLogToFile(level: string, message: string) {
+		const filePath =
+			level === 'error' ? this.errorLogFilePath : this.logFilePath;
+
+		fs.access(filePath, fs.constants.F_OK, (err) => {
+			if (err) {
+				fs.writeFile(filePath, '', (writeErr) => {
+					if (writeErr) {
+						this.logger.error('Error creating log file:', writeErr);
+					}
+				});
+			}
+
+			fs.stat(filePath, (err, stats) => {
+				if (err) {
+					this.logger.error(err);
+					return;
+				}
+
+				if (stats.size >= this.maxFileSize) {
+					fs.rename(filePath, `${filePath}.${Date.now()}`, (renameErr) => {
+						if (renameErr) {
+							this.logger.error('Error rotating log file:', renameErr);
+						} else {
+							this.logger.log('Log file rotated successfully.');
+						}
+					});
+				}
+
+				fs.appendFile(filePath, message, (appendErr) => {
+					// if (appendErr) {
+					// 	this.logger.error('Error writing to log file:', appendErr);
+					// } else {
+					// 	this.logger.log('Log message written successfully.');
+					// }
+				});
+			});
+		});
 	}
 
 	private shouldLog(level: string): boolean {
