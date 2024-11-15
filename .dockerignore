@@ -10,7 +10,7 @@ npm-debug.log
 tmp
 temp
 
-**/dist
+/db
 **/build
 
 .env

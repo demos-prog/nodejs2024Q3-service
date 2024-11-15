@@ -2,15 +2,14 @@ FROM node:lts-alpine3.20
 
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json", "./"]
-# COPY /prisma /app/prisma
+COPY package*.json ./
 
-RUN npm install
-RUN npm i -g prisma
+RUN npm install --omit=dev
 
-COPY . .
+COPY dist ./dist
+COPY prisma ./prisma
 
-# RUN npx prisma generate --no-engine --schema ./prisma/schema.prisma
+RUN npx prisma generate --no-engine
 
 EXPOSE 4000
 
