@@ -7,10 +7,11 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { LoggingService } from './logging/logging.service';
 import { LoggingModule } from './logging/logging.module';
+import { HttpExceptionFilter } from './exceptionfilter/exception.filter';
 
 @Module({
 	imports: [
@@ -29,6 +30,10 @@ import { LoggingModule } from './logging/logging.module';
 			provide: APP_GUARD,
 			useClass: AuthGuard,
 		},
+		{
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
 		LoggingService,
 	],
 })
