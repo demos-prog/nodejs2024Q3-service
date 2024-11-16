@@ -23,22 +23,16 @@ npm i
 4. run:
 
 ```
-npx prisma migrate dev --name init
-```
-
-5. run:
-
-```
 npm run seed
 ```
 
-6. Start the server
+5. Start the server
 
 ```
 npm start
 ```
 
-7. Run tests in a separate terminal
+6. Run tests in a separate terminal
 
 ```
 npm run test
