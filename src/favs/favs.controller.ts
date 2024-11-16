@@ -105,8 +105,8 @@ export class FavsController {
 		@Request() req,
 	) {
 		const userId = req.user.userId;
-
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
+
 		const track = favoritesOfUser.tracks.find((id) => id === trackId);
 		if (!track) {
 			throw new NotFoundException(
@@ -121,6 +121,7 @@ export class FavsController {
 	}
 
 	@Post('album/:id')
+
 	async addToFavAlbums(
 		@Param('id', new ParseUUIDPipe()) albumId: string,
 		@Request() req,
@@ -161,6 +162,7 @@ export class FavsController {
 		const userId = req.user.userId;
 
 		const favoritesOfUser: Favorites = await this.favsService.findOne(userId);
+
 		const album = favoritesOfUser.albums.find((id) => id === albumId);
 		if (!album) {
 			throw new NotFoundException(
@@ -210,6 +212,7 @@ export class FavsController {
 	@HttpCode(204)
 	async removeFromFavArtists(
 		@Param('id', new ParseUUIDPipe()) artistId: string,
+
 		@Request() req,
 	) {
 		const userId = req.user.userId;
