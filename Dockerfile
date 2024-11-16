@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.20
+FROM node:20.18.0-alpine3.19
 
 WORKDIR /app
 
@@ -6,8 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY dist ./dist
-COPY prisma ./prisma
+COPY . .
 
 RUN npx prisma generate --no-engine
 

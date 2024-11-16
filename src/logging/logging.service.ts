@@ -14,8 +14,18 @@ export class LoggingService {
 		this.logLevel = process.env.LOG_LEVEL || 'log';
 		this.maxFileSize =
 			(parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024) * 1024;
-		this.logFilePath = path.join(__dirname, 'application.log');
-		this.errorLogFilePath = path.join(__dirname, 'error.log');
+		this.logFilePath = path.join(
+			process.cwd(),
+			'src',
+			'logging',
+			'application.log',
+		);
+		this.errorLogFilePath = path.join(
+			process.cwd(),
+			'src',
+			'logging',
+			'error.log',
+		);
 		this.logger = new Logger(LoggingService.name);
 
 		process.on('uncaughtException', (error) => {

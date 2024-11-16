@@ -1,15 +1,15 @@
 services:
   postgress:
     container_name: postgress
-    build: ./prisma
-    # image: dmitrywebwell/nodejs2024q3-service-postgress:latest
+    # build: ./prisma
+    image: dmitrywebwell/nodejs2024q3-service-postgress:latest
     environment:
       PG_DATA: /var/lib/postgresql/data
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       DATABASE_URL: ${DATABASE_URL}
       PULSE_API_KEY: ${PULSE_API_KEY}
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - ./db:/var/lib/postgresql/data
     restart: always
@@ -18,14 +18,14 @@ services:
 
   nest-app:
     container_name: nest_app
-    build: ./
-    # image: dmitrywebwell/nodejs2024q3-service-nest-app:latest
+    # build: ./
+    image: dmitrywebwell/nodejs2024q3-service-nest-app:latest
     ports:
       - '4000:4000'
     depends_on:
       - postgress
-    # volumes:
-    #   - ./app:/home/node/app
+    volumes:
+      - ./app:/home/node/app
     environment:
       DATABASE_URL: ${DATABASE_URL}
     command: sh -c "npm run seed && npm start"
