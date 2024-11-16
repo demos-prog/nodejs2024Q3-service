@@ -1,4 +1,21 @@
 services:
+  postgress:
+    container_name: postgress
+    # build: ./prisma
+    image: dmitrywebwell/nodejs2024q3-service-postgress:latest
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL}
+      PULSE_API_KEY: ${PULSE_API_KEY}
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - user-defined
+
   nest-app:
     container_name: nest_app
     # build: ./
@@ -8,10 +25,10 @@ services:
     depends_on:
       - postgress
     volumes:
-      - app_logs:/var/log/app
+      - ./app:/home/node/app
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    command: sh -c "npx prisma generate --no-engine && npm run seed && npm start"
+    command: sh -c "npm run seed && npm start"
     restart: always
     networks:
       - user-defined
@@ -32,10 +49,6 @@ services:
     restart: always
     networks:
       - user-defined
-
-volumes:
-  postgres_data:
-  app_logs:
 
 networks:
   user-defined:

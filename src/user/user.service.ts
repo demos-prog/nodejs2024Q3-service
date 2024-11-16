@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { creatHash } from '../helpers/createHash';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class UserService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly favService: FavsService,
+	) {}
 
 	async getAll() {
 		return this.prisma.user.findMany({
@@ -25,9 +30,20 @@ export class UserService {
 		});
 	}
 
+	async getBylogin(login: string) {
+		return await this.prisma.user.findFirst({
+			where: { login },
+		});
+	}
+
 	async create(dto: CreateUserDto) {
-		return this.prisma.user.create({
-			data: { ...dto, version: 1 },
+		const newUser: CreateUserDto = {
+			login: dto.login,
+			password: creatHash(dto.password),
+		};
+
+		const createdUser = await this.prisma.user.create({
+			data: { ...newUser, version: 1 },
 			select: {
 				id: true,
 				login: true,
@@ -36,6 +52,14 @@ export class UserService {
 				updatedAt: true,
 			},
 		});
+
+		this.favService.create(createdUser.id, {
+			artists: [],
+			albums: [],
+			tracks: [],
+		});
+
+		return createdUser;
 	}
 
 	async updatePassword(
@@ -57,6 +81,14 @@ export class UserService {
 	}
 
 	async delete(userId: string) {
+		const user = await this.getById(userId);
+		if (!user) {
+			throw new NotFoundException(`User with ID ${userId} not found`);
+		}
+		const favoritesOfUser = await this.favService.findOne(userId);
+		if (favoritesOfUser) {
+			await this.favService.remove(userId);
+		}
 		return this.prisma.user.delete({ where: { id: userId } });
 	}
 }

@@ -14,6 +14,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePassword.dto';
+import comparePassword from '../helpers/compareHash';
+import { creatHash } from '../helpers/createHash';
 
 @Controller('user')
 export class UserController {
@@ -57,12 +59,18 @@ export class UserController {
 		if (!user) {
 			throw new NotFoundException(`User with ID ${userId} not found`);
 		}
-		if (user.password !== dto.oldPassword) {
+		if (!comparePassword(user.password, dto.oldPassword)) {
 			throw new ForbiddenException('Incorrect existing password');
 		}
+
+		const updatedDto: UpdatePasswordDto = {
+			oldPassword: dto.oldPassword,
+			newPassword: creatHash(dto.newPassword),
+		};
+
 		const updatedUser = await this.userService.updatePassword(
 			userId,
-			dto,
+			updatedDto,
 			user.version + 1,
 		);
 		return {
@@ -75,10 +83,6 @@ export class UserController {
 	@Delete(':id')
 	@HttpCode(204)
 	async delete(@Param('id', new ParseUUIDPipe()) userId: string) {
-		const user = await this.userService.getById(userId);
-		if (!user) {
-			throw new NotFoundException(`User with ID ${userId} not found`);
-		}
 		await this.userService.delete(userId);
 	}
 }

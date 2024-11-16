@@ -1,10 +1,16 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+function creatHash(data: string) {
+	const saltRounds = parseInt(process.env.CRYPT_SALT || '10', 10);
+	return bcrypt.hashSync(data, saltRounds);
+}
+
 async function main() {
 	const user = await prisma.user.create({
-		data: { login: 'Dima', password: 'password', version: 1 },
+		data: { login: 'user', password: creatHash('123'), version: 1 },
 	});
 
 	const artist = await prisma.artist.create({
