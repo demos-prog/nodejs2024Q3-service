@@ -33,23 +33,6 @@ services:
     networks:
       - user-defined
 
-  postgress:
-    container_name: prisma_postgress
-    # build: ./prisma
-    image: dmitrywebwell/nodejs2024q3-service-postgress:latest
-    environment:
-      PG_DATA: /var/lib/postgresql/data
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_URL: ${DATABASE_URL}
-      PULSE_API_KEY: ${PULSE_API_KEY}
-    ports:
-      - '5433:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-    networks:
-      - user-defined
-
 networks:
   user-defined:
     driver: bridge

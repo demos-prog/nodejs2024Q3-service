@@ -41,7 +41,7 @@ npm start
 7. Run tests in a separate terminal
 
 ```
-npm run test
+npm run test:auth
 ```
 
 ## Running application
