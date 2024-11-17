@@ -20,19 +20,13 @@ npm i
 
 3. Rename the `.env.example` file to `.env`
 
-4. run:
-
-```
-npm run seed
-```
-
-5. Start the server
+4. Start the server
 
 ```
 npm start
 ```
 
-6. Run tests in a separate terminal
+5. Run tests in a separate terminal
 
 ```
 npm run test:auth

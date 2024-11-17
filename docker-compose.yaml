@@ -28,7 +28,7 @@ services:
       - ./app:/home/node/app
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    command: sh -c "npm run seed && npm start"
+    command: sh -c "npm start"
     restart: always
     networks:
       - user-defined
