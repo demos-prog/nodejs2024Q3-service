@@ -3,7 +3,6 @@ services:
     container_name: postgress
     # build: ./prisma
     image: dmitrywebwell/nodejs2024q3-service-postgress:latest
-
     environment:
       PG_DATA: /var/lib/postgresql/data
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
