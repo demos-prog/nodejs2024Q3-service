@@ -18,12 +18,14 @@ export class LoggingService {
 			process.cwd(),
 			'src',
 			'logging',
+			'logs',
 			'application.log',
 		);
 		this.errorLogFilePath = path.join(
 			process.cwd(),
 			'src',
 			'logging',
+			'logs',
 			'error.log',
 		);
 		this.logger = new Logger(LoggingService.name);
