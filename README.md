@@ -32,6 +32,22 @@ npm start
 npm run test:auth
 ```
 
+6. !!! Important !!! If you got an error: `Authorization is not implemented`
+
+6.1 run:
+
+```
+npx prisma studio
+```
+
+6.2 Open browser on `http://localhost:5555` and delete manualy all favorites (in FAvorites table) then all users (in User table)
+
+6.3 run:
+
+```
+npm run test:auth
+```
+
 ## Running application
 
 ```
