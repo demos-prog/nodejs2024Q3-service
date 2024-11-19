@@ -43,9 +43,9 @@ npm run test:auth
 
    6.3 In Prisma Studio, manually delete all entries in the **Favorites** table and then all entries in the **Users** table.
 
-   6.4 After clearing the tables, run the application again:
+   6.4 After clearing the tables, run the tests again:
    ```bash
-   npm start
+   npm run test:auth
    ```
 
 ## Running application
