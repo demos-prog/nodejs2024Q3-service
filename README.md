@@ -23,7 +23,7 @@ npm i
 4. Start the server
 
 ```bash
-npm start
+npm run start:docker
 ```
 
 5. Run tests in a separate terminal
