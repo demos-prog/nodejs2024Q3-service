@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "seed": "ts-node prisma/seed.ts",
-    "start": "nest start",
+    "start": "npx prisma migrate dev --name init && nest start",
     "start:docker": "docker-compose down -v && docker-compose up --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
