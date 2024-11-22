@@ -49,3 +49,7 @@ npm run test:auth
    ```bash
    npm run test:auth
    ```
+
+## Logging note
+
+To see the logs you should start the app using `npm start` and then do some requests, for example run `npm run test:auth`. Log files are in the folder `/src/logging`.
