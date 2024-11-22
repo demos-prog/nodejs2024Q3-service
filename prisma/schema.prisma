@@ -46,8 +46,7 @@ model Album {
 }
 
 model Favorites {
-  id      String   @id @default(uuid()) // uuid v4
-  userId  String // refers to User
+  userId  String   @id @default(uuid()) // uuid v4
   artists String[] // favorite artists ids
   albums  String[] // favorite albums ids
   tracks  String[] // favorite tracks ids
@@ -56,5 +55,5 @@ model Favorites {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL2")
 }

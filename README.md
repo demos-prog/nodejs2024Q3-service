@@ -1,72 +1,55 @@
 # Home Library Service
 
-## Prerequisites
-
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
 ## Downloading
 
-```
-git clone {repository URL}
-```
-
-## Installing NPM modules
-
-```
-npm install
+```bash
+git clone https://github.com/demos-prog/nodejs2024Q3-service.git
 ```
 
-## Running application
+## Testing and running
 
-```
-npm start
-```
+!!! BEFORE STARTING !!!
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+1. Change current work branch to `dev`
 
-## Testing
+2. run:
 
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
+```bash
+npm i
 ```
 
-To run only one of all test suites
+3. Rename the `.env.example` file to `.env`
 
-```
-npm run test -- <path to suite>
+4. Start the server
+
+```bash
+npm run start:docker
 ```
 
-To run all test with authorization
+5. Run tests in a separate terminal
 
-```
+```bash
 npm run test:auth
 ```
 
-To run only specific test suite with authorization
+6. !!! Important !!! If you encounter the error: `Authorization is not implemented`, please follow these steps:
 
-```
-npm run test:auth -- <path to suite>
-```
+   6.1 Run the following command to open Prisma Studio:
 
-### Auto-fix and format
+   ```bash
+   npx prisma studio
+   ```
 
-```
-npm run lint
-```
+   6.2 Open your browser and navigate to `http://localhost:5555`.
 
-```
-npm run format
-```
+   6.3 In Prisma Studio, manually delete all entries in the **Favorites** table and then all entries in the **User** table.
 
-### Debugging in VSCode
+   6.4 After clearing the tables, run the tests again:
 
-Press <kbd>F5</kbd> to debug.
+   ```bash
+   npm run test:auth
+   ```
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+## Logging note
+
+To see the logs you should start the app using `npm start` and then do some requests, for example run `npm run test:auth`. Log files are in the folder `/src/logging`.
