@@ -2,7 +2,7 @@
 
 ## Downloading
 
-```
+```bash
 git clone https://github.com/demos-prog/nodejs2024Q3-service.git
 ```
 
@@ -14,7 +14,7 @@ git clone https://github.com/demos-prog/nodejs2024Q3-service.git
 
 2. run:
 
-```
+```bash
 npm i
 ```
 
@@ -22,24 +22,34 @@ npm i
 
 4. Start the server
 
-```
-npm start
+```bash
+npm run start:docker
 ```
 
 5. Run tests in a separate terminal
 
-```
+```bash
 npm run test:auth
 ```
 
-## Running application
+6. !!! Important !!! If you encounter the error: `Authorization is not implemented`, please follow these steps:
 
-```
-npm start
-```
+   6.1 Run the following command to open Prisma Studio:
 
-## Running application in Docker
+   ```bash
+   npx prisma studio
+   ```
 
-```
-npm run start:docker
-```
+   6.2 Open your browser and navigate to `http://localhost:5555`.
+
+   6.3 In Prisma Studio, manually delete all entries in the **Favorites** table and then all entries in the **User** table.
+
+   6.4 After clearing the tables, run the tests again:
+
+   ```bash
+   npm run test:auth
+   ```
+
+## Logging note
+
+To see the logs you should start the app using `npm start` and then do some requests, for example run `npm run test:auth`. Log files are in the folder `/src/logging`.
